@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AyurCare Chat</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            /* Ayurvedic Green Palette */
+            --primary-green: #4a7c59;
+            --primary-green-light: #5a9870;
+            --primary-green-dark: #3a6448;
+            --herbal-green: #6b9080;
+            --sage-green: #8ca88e;
+            
+            /* Earth Tones */
+            --beige: #f5f1e8;
+            --cream: #faf8f3;
+            --sand: #e8dfd3;
+            --earth-brown: #8b7355;
+            
+            /* Accent Colors */
+            --gold: #d4af37;
+            --gold-light: #dfc870;
+            
+            /* Neutral Colors */
+            --text-primary: #2d3e3a;
+            --text-secondary: #5a6c68;
+            --text-light: #7a8c88;
+            --white: #ffffff;
+            --off-white: #fefdfb;
+            --border-color: #d8d4ca;
+            
+            /* Status Colors */
+            --success: #4a7c59;
+            --danger: #c17c5d;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(74, 124, 89, 0.08);
+            --shadow-md: 0 4px 12px rgba(74, 124, 89, 0.12);
+            --shadow-lg: 0 10px 30px rgba(74, 124, 89, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--cream) 0%, var(--beige) 100%);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--white);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .new-chat {
+            margin: 15px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        .new-chat:hover {
+            background: linear-gradient(135deg, var(--primary-green-dark), var(--primary-green));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: var(--cream);
+        }
+
+        .chat-date {
+            color: var(--text-primary);
+            opacity: 0.7;
+            font-size: 0.9em;
+            padding: 10px 15px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .chat-item {
+            padding: 15px;
+            margin: 5px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-item:hover {
+            background: var(--off-white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary-green);
+        }
+
+        .chat-item.active {
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            color: white;
+            border-color: var(--primary-green);
+        }
+
+        .chat-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .chat-preview {
+            font-size: 0.9em;
+            opacity: 0.8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-actions {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-item:hover .chat-actions {
+            opacity: 1;
+        }
+
+        .chat-action-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .chat-action-btn:hover {
+            color: var(--primary-green);
+        }
+
+        .chat-action-btn.delete:hover {
+            color: var(--danger);
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 2px solid var(--border-color);
+            background: var(--cream);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            color: var(--text-primary);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logout-btn {
+            padding: 8px 15px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .logout-btn:hover {
+            background: #a46449;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Main Chat Area Styles */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--cream);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .home-btn {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .home-btn:hover {
+            background: linear-gradient(135deg, var(--primary-green-dark), var(--primary-green));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chat-header h1 {
+            color: var(--primary-green);
+            font-size: 2em;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-header h1::before,
+        .chat-header h1::after {
+            content: '🌿';
+            font-size: 1.2em;
+            background: none;
+            -webkit-text-fill-color: var(--primary-green);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .language-select {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            background: var(--white);
+            color: var(--text-primary);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .language-select:hover {
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: linear-gradient(135deg, rgba(74, 124, 89, 0.03) 0%, rgba(107, 144, 128, 0.05) 100%);
+        }
+
+        .message {
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            gap: 20px;
+            max-width: 80%;
+            animation: messageSlide 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            background: var(--white);
+            align-self: flex-start;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, rgba(74, 124, 89, 0.1), rgba(107, 144, 128, 0.1));
+            align-self: flex-end;
+            border-right: 4px solid var(--herbal-green);
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-text {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .voice-output-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .voice-output-btn:hover {
+            color: var(--primary-green);
+            opacity: 1;
+        }
+
+        .voice-output-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .remedy-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .remedy-image-container {
+            text-align: center;
+            background: var(--cream);
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+
+        .remedy-image-container:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-green);
+        }
+
+        .remedy-image-container img {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .remedy-name {
+            color: var(--text-primary);
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 2px solid var(--border-color);
+            background: var(--white);
+        }
+
+        .chat-input-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--cream);
+            color: var(--text-primary);
+            font-size: 1em;
+            resize: none;
+            min-height: 50px;
+            max-height: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.1);
+            background: var(--white);
+        }
+
+        .input-buttons {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .input-button:hover {
+            color: var(--primary-green);
+            background: rgba(74, 124, 89, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                left: 10px;
+                top: 10px;
+                z-index: 1001;
+                background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+                color: white;
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: var(--shadow-md);
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+
+        .alert-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.9em;
+            z-index: 1000;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <button class="new-chat" onclick="startNewChat()">
+            <i class="fas fa-plus"></i>
+            New Chat
+        </button>
+        <div class="chat-history" id="chatHistory">
+            <!-- Chat history will be populated here -->
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>{{ current_user.username }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-left">
+                <a href="{{ url_for('home') }}" class="home-btn">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <h1>AyurCare</h1>
+            </div>
+            <div class="header-actions">
+                <select id="languageSelect" class="language-select">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी (Hindi)</option>
+                    <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                    <option value="ta">தமிழ் (Tamil)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be populated here -->
+        </div>
+
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <textarea class="chat-input" id="messageInput" placeholder="Ask me about any health concerns..."
+                    rows="1"></textarea>
+                <div class="input-buttons">
+                    <button class="input-button" onclick="startSpeechRecognition()" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="input-button" onclick="sendMessage()" title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+
+        // Auto-resize textarea
+        const textarea = document.querySelector('.chat-input');
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Load chat history
+        function loadChatHistory() {
+            fetch('/get_chat_sessions')
+                .then(response => response.json())
+                .then(sessions => {
+                    const chatHistory = document.getElementById('chatHistory');
+                    chatHistory.innerHTML = '';
+
+                    // Group sessions by date
+                    const groupedSessions = {};
+                    sessions.forEach(session => {
+                        const date = new Date(session.created_at).toLocaleDateString();
+                        if (!groupedSessions[date]) {
+                            groupedSessions[date] = [];
+                        }
+                        groupedSessions[date].push(session);
+                    });
+
+                    // Create chat history items
+                    Object.entries(groupedSessions).forEach(([date, dateSessions]) => {
+                        const dateHeader = document.createElement('div');
+                        dateHeader.className = 'chat-date';
+                        dateHeader.textContent = date;
+                        chatHistory.appendChild(dateHeader);
+
+                        dateSessions.forEach(session => {
+                            const chatItem = document.createElement('div');
+                            chatItem.className = 'chat-item';
+                            chatItem.dataset.sessionId = session.id;
+                            if (session.id === currentSessionId) {
+                                chatItem.classList.add('active');
+                            }
+                            chatItem.innerHTML = `
+                                <div class="chat-title">${session.title}</div>
+                                <div class="chat-preview">${session.preview || 'New chat'}</div>
+                                <div class="chat-actions">
+                                    <button class="chat-action-btn delete" onclick="deleteChatSession(${session.id}, event)" title="Delete Chat">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                            chatItem.onclick = (e) => {
+                                if (!e.target.closest('.chat-actions')) {
+                                    loadChatSession(session.id);
+                                }
+                            };
+                            chatHistory.appendChild(chatItem);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error loading chat history:', error));
+        }
+
+        // Delete chat session
+        function deleteChatSession(sessionId, event) {
+            event.stopPropagation();
+            if (confirm('Are you sure you want to delete this chat?')) {
+                fetch(`/delete_chat_session/${sessionId}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (currentSessionId === sessionId) {
+                                startNewChat();
+                            } else {
+                                loadChatHistory();
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error deleting chat session:', error));
+            }
+        }
+
+        // Load specific chat session
+        function loadChatSession(sessionId) {
+            currentSessionId = sessionId;
+            fetch(`/get_chat_session/${sessionId}`)
+                .then(response => response.json())
+                .then(session => {
+                    const messagesContainer = document.getElementById('chatMessages');
+                    messagesContainer.innerHTML = '';
+
+                    session.messages.forEach(msg => {
+                        const images = msg.images ? JSON.parse(msg.images) : [];
+                        const remedyNames = msg.remedy_names ? JSON.parse(msg.remedy_names) : [];
+                        addMessage('user', msg.message);
+                        addMessage('bot', msg.response, images, remedyNames);
+                    });
+
+                    // Update active state in sidebar
+                    document.querySelectorAll('.chat-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (item.dataset.sessionId === sessionId.toString()) {
+                            item.classList.add('active');
+                        }
+                    });
+                })
+                .catch(error => console.error('Error loading chat session:', error));
+        }
+
+        // Start new chat
+        function startNewChat() {
+            fetch('/create_chat_session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: 'Start your conversation...'
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    currentSessionId = data.session_id;
+                    document.getElementById('chatMessages').innerHTML = '';
+                    document.getElementById('messageInput').value = '';
+                    loadChatHistory();
+                })
+                .catch(error => console.error('Error creating new chat:', error));
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            if (!currentSessionId) {
+                startNewChat();
+                return;
+            }
+
+            const isVoiceInput = message.toLowerCase().includes('voice input');
+            const selectedLang = document.getElementById('languageSelect').value;
+
+            // Add user message to chat
+            addMessage('user', message);
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Get bot response
+            fetch('/get_bot_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    language: selectedLang,
+                    session_id: currentSessionId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Bot response data:', data);
+                    console.log('Images:', data.images);
+                    console.log('Remedy names:', data.remedyNames);
+                    addMessage('bot', data.text, data.images, data.remedyNames);
+                    // Automatically speak the response if it came from voice input and not Kannada
+                    if (isVoiceInput && selectedLang !== 'kn') {
+                        setTimeout(() => {
+                            speakMessage(data.text, selectedLang);
+                        }, 500); // Small delay to ensure message is added to DOM
+                    }
+                    // Update chat title with first message
+                    if (document.querySelectorAll('.message').length === 2) {
+                        updateChatTitle(message);
+                    }
+                    loadChatHistory();
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Update chat title
+        function updateChatTitle(message) {
+            fetch(`/update_chat_title/${currentSessionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: message.length > 50 ? message.substring(0, 50) + '...' : message
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadChatHistory();
+                    }
+                })
+                .catch(error => console.error('Error updating chat title:', error));
+        }
+
+        // Add message to chat
+        function addMessage(type, text, images = [], remedyNames = []) {
+            console.log('addMessage called with:', { type, text, images, remedyNames });
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+
+            const avatar = type === 'bot' ?
+                '<i class="fas fa-leaf"></i>' :
+                '<i class="fas fa-user"></i>';
+
+            let imagesHtml = '';
+            if (images && images.length > 0) {
+                console.log('Building images HTML for', images.length, 'images');
+                imagesHtml = '<div class="remedy-images">';
+                images.forEach((url, index) => {
+                    console.log(`Adding image ${index}: ${url}`);
+                    imagesHtml += `
+                        <div class="remedy-image-container">
+                            <img src="${url}" alt="${remedyNames[index] || 'Remedy'}">
+                            <div class="remedy-name">${remedyNames[index] || 'Remedy'}</div>
+                        </div>
+                    `;
+                });
+                imagesHtml += '</div>';
+            } else {
+                console.log('No images to display');
+            }
+
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-text">${text}</div>
+                    ${imagesHtml}
+                    <div class="message-actions">
+                        ${type === 'bot' && document.getElementById('languageSelect').value !== 'kn' ? `
+                            <button class="voice-output-btn" data-speak-text="${text.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, ' ')}" title="Speak Message">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Add click event listener for voice button if it's a bot message
+            if (type === 'bot' && document.getElementById('languageSelect').value !== 'kn') {
+                const voiceBtn = messageDiv.querySelector('.voice-output-btn');
+                if (voiceBtn) {
+                    voiceBtn.addEventListener('click', function() {
+                        const textToSpeak = this.getAttribute('data-speak-text');
+                        const lang = document.getElementById('languageSelect').value;
+                        speakMessage(textToSpeak, lang);
+                    });
+                }
+            }
+
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Speech Recognition
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US'; // Always use English for voice input
+        recognition.lang = 'en-In';
+        recognition.interimResults = false;
+
+        function startSpeechRecognition() {
+            recognition.start();
+            const micButton = document.querySelector('.fa-microphone');
+            micButton.style.color = '#ff4444';
+        }
+
+
+        // Basic Speech Recognition (non-Edge safe)
+        recognition.onresult = (event) => {
+            const text = event.results[0][0].transcript;
+            document.getElementById('messageInput').value = text;
+            const micButton = document.querySelector('.fa-microphone');
+            micButton.style.color = '';
+            sendMessage();
+        };
+
+        recognition.onend = () => {
+            const micButton = document.querySelector('.fa-microphone');
+            micButton.style.color = '';
+        };
+
+        // Handle Enter key
+        document.getElementById('messageInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Text to Speech
+        let voicesLoaded = false;
+        let availableVoices = [];
+
+        // Load voices when they become available
+        function loadVoices() {
+            availableVoices = window.speechSynthesis.getVoices();
+            voicesLoaded = availableVoices.length > 0;
+            console.log('Available voices:', availableVoices.length);
+            availableVoices.forEach(voice => {
+                console.log(`Voice: ${voice.name}, Lang: ${voice.lang}`);
+            });
+        }
+
+        // Chrome loads voices asynchronously
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+        loadVoices();
+
+        function speakMessage(text, language) {
+            if (!text) return;
+
+            // Ensure voices are loaded
+            if (!voicesLoaded) {
+                loadVoices();
+            }
+
+            // Map language codes to speech synthesis language codes
+            const langMap = {
+                'en': 'en-US',
+                'hi': 'hi-IN',
+                'kn': 'kn-IN',
+                'te': 'te-IN'
+            };
+
+            const targetLang = langMap[language] || 'en-US';
+            console.log('Attempting to speak in:', targetLang);
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = targetLang;
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            // Try to find a voice that matches the language
+            const voices = window.speechSynthesis.getVoices();
+            let selectedVoice = null;
+
+            // First, try exact match
+            selectedVoice = voices.find(voice => voice.lang === targetLang);
+
+            // If not found, try language prefix match (e.g., 'hi' for 'hi-IN')
+            if (!selectedVoice) {
+                const langPrefix = targetLang.split('-')[0];
+                selectedVoice = voices.find(voice => voice.lang.startsWith(langPrefix));
+            }
+
+            // If still not found, try any voice with 'IN' suffix for Indian languages
+            if (!selectedVoice && (language === 'hi' || language === 'kn' || language === 'te')) {
+                selectedVoice = voices.find(voice => voice.lang.endsWith('-IN'));
+            }
+
+            // If no matching voice found, fall back to English
+            if (!selectedVoice) {
+                console.warn('No voice found for', targetLang, '- falling back to English');
+                selectedVoice = voices.find(voice => voice.lang.startsWith('en'));
+                utterance.lang = 'en-US'; // Change language to English
+            }
+
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                console.log('Using voice:', selectedVoice.name, 'for language:', selectedVoice.lang);
+            }
+
+            // Stop any ongoing speech
+            window.speechSynthesis.cancel();
+
+            // Small delay to ensure cancel completes
+            setTimeout(() => {
+                window.speechSynthesis.speak(utterance);
+                console.log('Speaking:', text.substring(0, 50) + '...', 'Language:', targetLang);
+            }, 100);
+
+            // Error handling
+            utterance.onerror = function(event) {
+                console.error('Speech synthesis error:', event.error);
+                // Don't show alert, just log the error
+                if (event.error === 'not-allowed') {
+                    console.warn('Speech synthesis not allowed. User may need to interact with page first.');
+                }
+            };
+
+            utterance.onstart = function() {
+                console.log('Speech started');
+            };
+
+            utterance.onend = function() {
+                console.log('Speech finished');
+            };
+        }
+
+        // Show alert message
+        function showAlert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert-message';
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+
+            // Remove alert after animation
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // Initialize: load existing sessions and open the latest one.
+        function initializeChat() {
+            fetch('/get_chat_sessions')
+                .then(response => response.json())
+                .then(sessions => {
+                    // If there are existing sessions, open the most recent
+                    if (sessions && sessions.length > 0) {
+                        currentSessionId = sessions[0].id;
+                        loadChatSession(currentSessionId);
+                    } else {
+                        // No sessions exist yet — create a new one
+                        startNewChat();
+                    }
+
+                    // Always refresh the sidebar list
+                    loadChatHistory();
+                })
+                .catch(error => {
+                    console.error('Error initializing chat:', error);
+                    // Fallback: create a new chat so UI is usable
+                    startNewChat();
+                    loadChatHistory();
+                });
+        }
+
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeChat();
+        });
+    </script>
+</body>
+
+</html>

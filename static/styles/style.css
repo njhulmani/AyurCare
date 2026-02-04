@@ -1,0 +1,505 @@
+/* ===============================================
+   AyurCare - Ayurvedic Healthcare Platform
+   Modern UI/UX with Ayurvedic Theme
+   =============================================== */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ===============================================
+   CSS Variables - Ayurvedic Color Palette
+   =============================================== */
+:root {
+  /* Ayurvedic Green Palette */
+  --primary-green: #4a7c59;
+  --primary-green-light: #5a9870;
+  --primary-green-dark: #3a6448;
+  --herbal-green: #6b9080;
+  --sage-green: #8ca88e;
+  
+  /* Earth Tones */
+  --beige: #f5f1e8;
+  --cream: #faf8f3;
+  --sand: #e8dfd3;
+  --earth-brown: #8b7355;
+  
+  /* Accent Colors */
+  --gold: #d4af37;
+  --gold-light: #dfc870;
+  --terracotta: #c17c5d;
+  --warm-orange: #d98555;
+  
+  /* Neutral Colors */
+  --text-primary: #2d3e3a;
+  --text-secondary: #5a6c68;
+  --text-light: #7a8c88;
+  --white: #ffffff;
+  --off-white: #fefdfb;
+  --light-gray: #f0eeea;
+  --border-color: #d8d4ca;
+  
+  /* Status Colors */
+  --success: #4a7c59;
+  --warning: #d98555;
+  --error: #c17c5d;
+  --info: #6b9080;
+  
+  /* Shadows and Effects */
+  --shadow-sm: 0 2px 4px rgba(74, 124, 89, 0.08);
+  --shadow-md: 0 4px 12px rgba(74, 124, 89, 0.12);
+  --shadow-lg: 0 10px 30px rgba(74, 124, 89, 0.15);
+  --shadow-xl: 0 20px 40px rgba(74, 124, 89, 0.18);
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 50%;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Legacy Variables (for compatibility) */
+  --body-bg: linear-gradient(135deg, var(--cream) 0%, var(--beige) 100%);
+  --msger-bg: var(--white);
+  --header-bg: linear-gradient(90deg, var(--primary-green), var(--herbal-green));
+  --left-msg-bg: var(--light-gray);
+  --right-msg-bg: var(--primary-green);
+  --text-color: var(--text-primary);
+  --border-radius: var(--radius-lg);
+}
+
+/* ===============================================
+   Base Styles
+   =============================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--body-bg);
+  font-family: 'Inter', 'Poppins', sans-serif;
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===============================================
+   Chat Container Styles
+   =============================================== */
+.msger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 900px;
+  height: 85vh;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+}
+
+/* ===============================================
+   Header Styles
+   =============================================== */
+.msger-header {
+  padding: 20px 25px;
+  background: var(--header-bg);
+  color: var(--white);
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.msger-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header h1::before {
+  content: '🌿';
+  font-size: 1.8rem;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===============================================
+   Form Controls - Ayurvedic Style
+   =============================================== */
+.language-select {
+  padding: 10px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  backdrop-filter: blur(10px);
+}
+
+.language-select:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--gold-light);
+}
+
+.language-select option {
+  background: var(--primary-green);
+  color: var(--white);
+}
+
+.download-btn {
+  padding: 10px 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  backdrop-filter: blur(10px);
+  font-size: 1rem;
+}
+
+.download-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--gold-light);
+  transform: translateY(-2px);
+}
+
+/* ===============================================
+   Chat Messages Area
+   =============================================== */
+.msger-chat {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+  background: linear-gradient(to bottom, var(--cream) 0%, var(--beige) 100%);
+  background-attachment: fixed;
+}
+
+.msger-chat::-webkit-scrollbar {
+  width: 10px;
+}
+
+.msger-chat::-webkit-scrollbar-track {
+  background: var(--light-gray);
+  border-radius: var(--radius-full);
+}
+
+.msger-chat::-webkit-scrollbar-thumb {
+  background: var(--primary-green);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--light-gray);
+  transition: background var(--transition-base);
+}
+
+.msger-chat::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green-dark);
+}
+
+/* ===============================================
+   Message Bubbles
+   =============================================== */
+.msg {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: flex-end;
+  animation: messageSlide 0.4s ease;
+}
+
+@keyframes messageSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.left-msg {
+  flex-direction: row;
+}
+
+.left-msg .msg-bubble {
+  background: var(--white);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.right-msg {
+  flex-direction: row-reverse;
+}
+
+.right-msg .msg-bubble {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--herbal-green) 100%);
+  color: var(--white);
+  border-bottom-right-radius: 4px;
+  box-shadow: var(--shadow-md);
+}
+
+.msg-img {
+  width: 45px;
+  height: 45px;
+  border-radius: var(--radius-full);
+  background-size: cover;
+  background-position: center;
+  margin: 0 12px;
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.msg-bubble {
+  max-width: 70%;
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-base);
+}
+
+.msg-bubble:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.msg-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.left-msg .msg-info-name {
+  color: var(--primary-green);
+  font-weight: 600;
+}
+
+.right-msg .msg-info-name {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.msg-info-time {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.msg-text {
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* Speak button for bot messages */
+.speak-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: var(--primary-green);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.speak-btn:hover {
+  background: var(--primary-green-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.speak-btn i {
+  font-size: 1rem;
+}
+
+/* ===============================================
+   Input Area Styles
+   =============================================== */
+.msger-inputarea {
+  display: flex;
+  padding: 20px;
+  background: var(--white);
+  border-top: 2px solid var(--border-color);
+  gap: 12px;
+  align-items: center;
+}
+
+.msger-input {
+  flex: 1;
+  padding: 14px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+  background: var(--cream);
+  resize: none;
+  transition: all var(--transition-base);
+}
+
+.msger-input:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+}
+
+.msger-input::placeholder {
+  color: var(--text-light);
+}
+
+.mic-btn, .msger-send-btn {
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.mic-btn {
+  background: linear-gradient(135deg, var(--herbal-green), var(--sage-green));
+  color: var(--white);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mic-btn:hover {
+  transform: scale(1.08);
+  box-shadow: var(--shadow-md);
+}
+
+.mic-btn:active {
+  transform: scale(0.95);
+}
+
+.msger-send-btn {
+  background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+  color: var(--white);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.msger-send-btn:hover {
+  background: linear-gradient(135deg, var(--primary-green-dark), var(--primary-green));
+  transform: scale(1.08);
+  box-shadow: var(--shadow-md);
+}
+
+.msger-send-btn:active {
+  transform: scale(0.95);
+}
+
+/* ===============================================
+   Responsive Design
+   =============================================== */
+@media (max-width: 768px) {
+  .msger {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  .msger-chat {
+    padding: 15px;
+  }
+  
+  .msg-bubble {
+    max-width: 85%;
+    padding: 12px 16px;
+  }
+  
+  .msg-img {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .msger-inputarea {
+    padding: 15px;
+  }
+  
+  .msger-input {
+    font-size: 0.95rem;
+    padding: 12px 16px;
+  }
+  
+  .mic-btn, .msger-send-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .msg-bubble {
+    max-width: 90%;
+  }
+  
+  .header h1 {
+    font-size: 1.2rem;
+  }
+  
+  .language-select {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+}

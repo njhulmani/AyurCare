@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayurvedic Remedies & Herbs - AyurCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Ayurvedic Green Palette */
+            --primary-green: #4a7c59;
+            --primary-green-light: #5a9870;
+            --primary-green-dark: #3a6448;
+            --herbal-green: #6b9080;
+            --sage-green: #8ca88e;
+            
+            /* Earth Tones */
+            --beige: #f5f1e8;
+            --cream: #faf8f3;
+            --sand: #e8dfd3;
+            --earth-brown: #8b7355;
+            
+            /* Accent Colors */
+            --gold: #d4af37;
+            --gold-light: #dfc870;
+            
+            /* Neutral Colors */
+            --text-primary: #2d3e3a;
+            --text-secondary: #5a6c68;
+            --text-light: #7a8c88;
+            --white: #ffffff;
+            --off-white: #fefdfb;
+            --border-color: #d8d4ca;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(74, 124, 89, 0.08);
+            --shadow-md: 0 4px 12px rgba(74, 124, 89, 0.12);
+            --shadow-lg: 0 10px 30px rgba(74, 124, 89, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--beige) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: var(--primary-green);
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(74, 124, 89, 0.1);
+        }
+
+        header p {
+            font-size: 1.3em;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .top-nav {
+            max-width: 1400px;
+            margin: 0 auto 10px auto;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .home-link:hover {
+            background: linear-gradient(135deg, var(--primary-green-dark), var(--primary-green));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .tab {
+            padding: 14px 32px;
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab:hover {
+            background: var(--off-white);
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            color: white;
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow-md);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-category {
+            display: inline-block;
+            padding: 6px 15px;
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card-title {
+            font-size: 1.6em;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .benefit-tag {
+            padding: 6px 12px;
+            background: var(--cream);
+            border-radius: 15px;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <a class="home-link" href="{{ url_for('home') }}">← Back to Home</a>
+    </div>
+    <div class="container">
+        <header>
+            <h1>🌿 Ayurvedic Remedies & Herbs</h1>
+            <p>Ancient Wisdom for Modern Wellness</p>
+        </header>
+
+        <div class="filter-tabs">
+            <div class="tab active" onclick="filterItems(event, 'all')">All</div>
+            <div class="tab" onclick="filterItems(event, 'herb')">Herbs</div>
+            <div class="tab" onclick="filterItems(event, 'remedy')">Remedies</div>
+            <div class="tab" onclick="filterItems(event, 'spice')">Spices</div>
+        </div>
+
+        <div class="grid" id="itemsGrid"></div>
+    </div>
+
+    <script>
+        const items = [
+            {
+                title: "Ashwagandha",
+                category: "herb",
+                desc: "Known as Indian Ginseng, this powerful adaptogen helps reduce stress, boost immunity, and improve overall vitality.",
+                benefits: ["Stress Relief", "Energy Boost", "Immunity"],
+                // image: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=800&q=80"
+                image: "https://as2.ftcdn.net/v2/jpg/15/35/60/33/1000_F_1535603338_zEMooq7k9rLJ7ii0M1wckkgAyKcPp4cl.jpg"
+
+            },
+            {
+                title: "Turmeric",
+                category: "spice",
+                desc: "Golden spice with curcumin, a potent anti-inflammatory compound that supports joint health and digestion.",
+                benefits: ["Anti-inflammatory", "Digestion", "Immunity"],
+                image: "https://t3.ftcdn.net/jpg/02/70/09/88/240_F_270098811_CzjDTNmRXoQg78CKORlTe8oJDtR3WVTZ.jpg"
+            },
+            {
+                title: "Tulsi (Holy Basil)",
+                category: "herb",
+                desc: "Sacred herb revered for its ability to boost immunity, reduce stress, and promote respiratory health.",
+                benefits: ["Immunity", "Stress Relief", "Respiratory"],
+                image: "https://images.unsplash.com/photo-1618375569909-3c8616cf7733?w=800&q=80"
+            },
+            {
+                title: "Triphala",
+                category: "remedy",
+                desc: "A blend of three fruits that gently detoxifies, improves digestion, and rejuvenates the body.",
+                benefits: ["Detox", "Digestion", "Rejuvenation"],
+                image: "https://t3.ftcdn.net/jpg/08/66/07/74/240_F_866077498_4lKOIrTuPr4WPSSP0KpaiPHVw7zQEpg3.jpg"
+            },
+            {
+                title: "Ginger",
+                category: "spice",
+                desc: "Warming spice that aids digestion, reduces nausea, and has powerful anti-inflammatory properties.",
+                benefits: ["Digestion", "Anti-inflammatory", "Nausea Relief"],
+                image: "https://t3.ftcdn.net/jpg/08/10/54/44/240_F_810544439_gMcDGbGuQdR8diKnfwaukgJ8J61Yk6BR.jpg"
+            },
+            {
+                title: "Brahmi",
+                category: "herb",
+                desc: "Brain tonic that enhances memory, concentration, and supports mental clarity and cognitive function.",
+                benefits: ["Memory", "Focus", "Mental Clarity"],
+                image: "https://t3.ftcdn.net/jpg/16/25/42/38/240_F_1625423845_eopgn4VX00kqa59HC0bzPQaB3Q8mCs3x.jpg"
+            },
+            {
+                title: "Neem",
+                category: "herb",
+                desc: "Powerful purifier known for its antibacterial properties, supports skin health and blood purification.",
+                benefits: ["Skin Health", "Purification", "Antibacterial"],
+                image: "https://t4.ftcdn.net/jpg/09/14/42/35/240_F_914423523_n8DtfXtN7NdYstMqAZh9TLkpyxDu3fcg.jpg"
+            },
+            {
+                title: "Cardamom",
+                category: "spice",
+                desc: "Aromatic spice that aids digestion, freshens breath, and supports respiratory and heart health.",
+                benefits: ["Digestion", "Breath Freshener", "Heart Health"],
+                image: "https://t3.ftcdn.net/jpg/15/42/52/64/240_F_1542526469_EETsktQBxrkgtXGDDZDuvMoLKtWt8ikE.jpg"
+            },
+            {
+                title: "Cumin(Jeera)",
+                category: "spice",
+                desc: "Warming spice that ignites digestive fire, aids in nutrient absorption, and helps eliminate toxins from the body.",
+                benefits: ["Digestion", "Detoxification", "Metabolism"],
+                image: "https://t3.ftcdn.net/jpg/07/11/82/16/240_F_711821694_gIzpYDAE246N9Bh6DaWDsK7xOOKg9Rfv.jpg"
+            },
+            {
+                title: "Fennel (Saunf)",
+                category: "spice",
+                desc: "Sweet and cooling spice that soothes the digestive system, reduces bloating, and supports healthy vision.",
+                benefits: ["Digestion", "Breath Freshener", "Eye Health"],
+                image: "https://t3.ftcdn.net/jpg/01/78/61/66/240_F_178616669_kwH3dzryDLvaF9NMIlw5MIT2Q9olfqCG.jpg"
+            },
+            {
+                title: "Amla (Indian Gooseberry)",
+                category: "herb",
+                desc: "Rich in Vitamin C, this super fruit boosts immunity, improves skin health, and promotes hair growth.",
+                benefits: ["Vitamin C", "Immunity", "Hair Growth"],
+                image: "https://t4.ftcdn.net/jpg/06/19/49/33/240_F_619493371_Sl2a4bJxQ3HDzC0IHyskYkuoakAyj8Gj.jpg"
+            },
+            {
+                title: "Clove (Laung)",
+                category: "spice",
+                desc: "Aromatic spice with powerful antiseptic properties, relieves toothache, and strengthens immune system.",
+                benefits: ["Oral Health", "Pain Relief", "Immunity"],
+                image: "https://t3.ftcdn.net/jpg/17/16/38/60/240_F_1716386064_WqS40UJn71IRL6U7cZLkgtr2dGiiuo4d.jpg"
+            },
+            {
+                title: "Ajwain (Carom Seeds)",
+                category: "spice",
+                desc: "Powerful digestive aid that relieves gas and bloating, supports respiratory health, and fights infections.",
+                benefits: ["Digestion", "Gas Relief", "Respiratory"],
+                image: "https://t4.ftcdn.net/jpg/16/42/14/53/240_F_1642145353_6asPUzlm1aeOQPQwW8kIwmwMRuG4vqjc.jpg"
+            },
+            {
+                title: "Mustard Seeds (Rai/Sarson)",
+                category: "spice",
+                desc: "Pungent seeds that improve blood circulation, stimulate digestion, and reduce joint inflammation.",
+                benefits: ["Circulation", "Digestion", "Joint Health"],
+                image: "https://t4.ftcdn.net/jpg/04/76/18/39/240_F_476183956_9tj7a4Yrqz8lwjMFGQlLZ5TleXy1jkjF.jpg"
+            },
+            {
+                title: "Ghee (Clarified Butter)",
+                category: "remedy",
+                desc: "Golden elixir that nourishes tissues, improves digestion, and supports brain health according to Ayurveda.",
+                benefits: ["Brain Health", "Digestion", "Nourishment"],
+                image: "https://t4.ftcdn.net/jpg/13/15/19/43/240_F_1315194377_Ro8c5tjMXYc3oEXUJ6zgyeIENDkdQyJX.jpg"
+            },
+            {
+                title: "Chyawanprash",
+                category: "remedy",
+                desc: "Ancient herbal jam packed with 40+ herbs and Amla, boosts immunity, increases vitality, and promotes longevity.",
+                benefits: ["Immunity", "Energy", "Longevity"],
+                image: "https://t3.ftcdn.net/jpg/11/29/69/06/240_F_1129690640_UKiGY7CaG4rAVvXg46mol5o3MQdLEQTQ.jpg"
+            },
+            {
+                title: "Trikatu",
+                category: "remedy",
+                desc: "Blend of three pungent spices (ginger, black pepper, long pepper) that kindles digestive fire and clears toxins.",
+                benefits: ["Metabolism", "Digestion", "Respiratory"],
+                image: "https://www.greendna.in/cdn/shop/files/Trikatu_1501x.jpg?v=1748083906"
+            },
+            {
+                title: "Shatavari",
+                category: "herb",
+                desc: "Women's wellness herb that balances hormones, supports reproductive health, and promotes vitality.",
+                benefits: ["Hormonal Balance", "Vitality", "Wellness"],
+                image: "https://t3.ftcdn.net/jpg/16/89/73/78/240_F_1689737825_4zPdfpXMeeX9t2YJCymTXRkNufxvW93V.jpg"
+            },
+            {
+                title: "Cinnamon",
+                category: "spice",
+                desc: "Sweet and warming spice that regulates blood sugar, improves circulation, and boosts metabolism.",
+                benefits: ["Blood Sugar", "Circulation", "Metabolism"],
+                image: "https://t3.ftcdn.net/jpg/02/24/20/56/240_F_224205694_M9vZgVIlX6fluteMyQHEJasTi8SkcrMo.jpg"
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        function renderItems(filter = 'all') {
+            const grid = document.getElementById('itemsGrid');
+            const filtered = filter === 'all' ? items : items.filter(item => item.category === filter);
+            
+            grid.innerHTML = filtered.map(item => `
+                <div class="card">
+                    <img src="${item.image}" alt="${item.title}" class="card-image">
+                    <div class="card-content">
+                        <span class="card-category">${item.category.toUpperCase()}</span>
+                        <h3 class="card-title">${item.title}</h3>
+                        <p class="card-desc">${item.desc}</p>
+                        <div class="benefits">
+                            ${item.benefits.map(b => `<span class="benefit-tag">✓ ${b}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterItems(evt, category) {
+            currentFilter = category;
+
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            if (evt && evt.currentTarget) {
+                evt.currentTarget.classList.add('active');
+            }
+            
+            renderItems(category);
+        }
+
+        renderItems();
+    </script>
+</body>
+</html>

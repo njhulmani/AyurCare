@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>AyurCare - Ayurvedic Health Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* ===============================================
+           AyurCare Chatbot UI - Ayurvedic Theme
+           =============================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Ayurvedic Color Palette */
+            --primary-green: #4a7c59;
+            --primary-green-light: #5a9870;
+            --herbal-green: #6b9080;
+            --sage-green: #8ca88e;
+            --beige: #f5f1e8;
+            --cream: #faf8f3;
+            --sand: #e8dfd3;
+            --earth-brown: #8b7355;
+            --gold: #d4af37;
+            
+            /* Chat Colors */
+            --bot-bubble-bg: #ffffff;
+            --user-bubble-bg: linear-gradient(135deg, #5a9870, #6b9080);
+            --text-primary: #2d3e3a;
+            --text-secondary: #5a6c68;
+            --text-muted: #94a3b8;
+            --border-color: #d8d4ca;
+            --white: #ffffff;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(74, 124, 89, 0.08);
+            --shadow-md: 0 4px 12px rgba(74, 124, 89, 0.12);
+            --shadow-lg: 0 10px 30px rgba(74, 124, 89, 0.15);
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--beige) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        /* ===============================================
+           Chat Container
+           =============================================== */
+        .msger {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        /* ===============================================
+           Chat Header
+           =============================================== */
+        .msger-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            color: var(--white);
+            padding: 20px 25px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .msger-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), transparent, var(--gold));
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1::before {
+            content: '🌿';
+            font-size: 1.8rem;
+            animation: leafFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes leafFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .language-select, .download-btn {
+            padding: 10px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-select:hover, .download-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .language-select option {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .download-btn {
+            padding: 10px 14px;
+        }
+
+        /* ===============================================
+           Chat Messages Area
+           =============================================== */
+        .msger-chat {
+            flex: 1;
+            padding: 30px 25px;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, var(--cream), var(--beige));
+            scroll-behavior: smooth;
+        }
+
+        .msger-chat::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .msger-chat::-webkit-scrollbar-track {
+            background: var(--sand);
+            border-radius: 10px;
+        }
+
+        .msger-chat::-webkit-scrollbar-thumb {
+            background: var(--herbal-green);
+            border-radius: 10px;
+            border: 2px solid var(--sand);
+        }
+
+        .msger-chat::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-green);
+        }
+
+        /* ===============================================
+           Message Bubbles
+           =============================================== */
+        .msg {
+            display: flex;
+            margin-bottom: 25px;
+            align-items: flex-end;
+            gap: 12px;
+            opacity: 0;
+            animation: messageSlideIn 0.4s ease forwards;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .left-msg {
+            flex-direction: row;
+        }
+
+        .right-msg {
+            flex-direction: row-reverse;
+        }
+
+        /* Avatar Styling */
+        .msg-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            border: 3px solid var(--white);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .left-msg .msg-img {
+            background-color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .left-msg .msg-img::before {
+            content: '🌿';
+        }
+
+        .right-msg .msg-img {
+            background-color: var(--herbal-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .right-msg .msg-img::before {
+            content: '\f007';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+
+        /* Message Bubble */
+        .msg-bubble {
+            max-width: 70%;
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .msg-bubble:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .left-msg .msg-bubble {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        .right-msg .msg-bubble {
+            background: var(--user-bubble-bg);
+            color: var(--white);
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Message Info */
+        .msg-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .msg-info-name {
+            font-weight: 600;
+        }
+
+        .left-msg .msg-info-name {
+            color: var(--primary-green);
+        }
+
+        .right-msg .msg-info-name {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .msg-info-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        /* Message Text */
+        .msg-text {
+            line-height: 1.7;
+            font-size: 0.98rem;
+            word-wrap: break-word;
+        }
+
+        .left-msg .msg-text {
+            color: var(--text-primary);
+        }
+
+        /* Speak Button */
+        .speak-btn {
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: var(--primary-green);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .speak-btn:hover {
+            background: var(--primary-green-light);
+            transform: translateX(2px);
+        }
+
+        .speak-btn i {
+            font-size: 1rem;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 10px 0;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Remedy Images */
+        .remedy-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .remedy-image-container {
+            text-align: center;
+            background: var(--cream);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease;
+        }
+
+        .remedy-image-container:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .remedy-image-container img {
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+        }
+
+        .remedy-name {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===============================================
+           Input Area
+           =============================================== */
+        .msger-inputarea {
+            display: flex;
+            padding: 20px 25px;
+            background: var(--white);
+            border-top: 2px solid var(--border-color);
+            gap: 12px;
+            align-items: center;
+        }
+
+        .msger-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: var(--cream);
+            transition: all 0.3s ease;
+        }
+
+        .msger-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.1);
+        }
+
+        .msger-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .mic-btn, .msger-send-btn {
+            width: 52px;
+            height: 52px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .mic-btn {
+            background: linear-gradient(135deg, var(--herbal-green), var(--sage-green));
+            color: var(--white);
+        }
+
+        .mic-btn:hover {
+            transform: scale(1.08);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mic-btn.listening {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .voice-notification {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .msger-send-btn {
+            background: linear-gradient(135deg, var(--primary-green), var(--herbal-green));
+            color: var(--white);
+        }
+
+        .msger-send-btn:hover {
+            background: linear-gradient(135deg, var(--primary-green-light), var(--primary-green));
+            transform: scale(1.08);
+            box-shadow: var(--shadow-md);
+        }
+
+        .msger-send-btn:active, .mic-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ===============================================
+           Responsive Design
+           =============================================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .msger {
+                max-width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                border: none;
+            }
+
+            .msger-chat {
+                padding: 20px 15px;
+            }
+
+            .msg-bubble {
+                max-width: 80%;
+                padding: 14px 16px;
+            }
+
+            .msg-img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header-buttons {
+                gap: 8px;
+            }
+
+            .language-select, .download-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+
+            .msger-inputarea {
+                padding: 15px;
+            }
+
+            .msger-input {
+                font-size: 0.95rem;
+                padding: 14px 18px;
+            }
+
+            .mic-btn, .msger-send-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .msg-bubble {
+                max-width: 85%;
+            }
+
+            .remedy-images {
+                gap: 10px;
+            }
+
+            .remedy-image-container img {
+                max-width: 150px;
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ayurvedic Chat Container -->
+    <section class="msger">
+        <!-- Chat Header -->
+        <header class="msger-header">
+            <div class="header">
+                <h1>AyurCare Assistant</h1>
+                <div class="header-buttons">
+                    <select id="languageSelect" class="language-select" aria-label="Select Language">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी (Hindi)</option>
+                        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                    </select>
+                    <button onclick="downloadChat()" class="download-btn" title="Download Chat History" aria-label="Download Chat">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Messages Container -->
+        <main class="msger-chat" id="chat-container" role="log" aria-live="polite" aria-atomic="false">
+            <!-- Welcome message will be added by JavaScript -->
+        </main>
+
+        <!-- Chat Input Area -->
+        <form class="msger-inputarea" aria-label="Message Input">
+            <input 
+                type="text" 
+                class="msger-input" 
+                id="textInput" 
+                placeholder="Ask about Ayurvedic remedies..."
+                aria-label="Type your message"
+                autocomplete="off"
+            >
+            <button 
+                type="button" 
+                class="mic-btn" 
+                onclick="startSpeechRecognition()" 
+                title="Voice Input"
+                aria-label="Voice Input"
+            >
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button 
+                type="submit" 
+                class="msger-send-btn" 
+                title="Send Message"
+                aria-label="Send Message"
+            >
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </section>
+
+    <script src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
+    <script>
+        /* ===============================================
+           Chat Configuration & Variables
+           =============================================== */
+        const msgerForm = get(".msger-inputarea");
+        const msgerInput = get(".msger-input");
+        const msgerChat = get(".msger-chat");
+
+        const BOT_NAME = "AyurCare";
+        const PERSON_NAME = "You";
+        let currentLanguage = 'en';
+        let isListening = false;
+
+        /* ===============================================
+           Auto-scroll to Latest Message
+           =============================================== */
+        function scrollToBottom() {
+            msgerChat.scrollTop = msgerChat.scrollHeight;
+        }
+
+        /* ===============================================
+           Show Typing Indicator
+           =============================================== */
+        function showTypingIndicator() {
+            const typingHTML = `
+                <div class="msg left-msg typing-msg">
+                    <div class="msg-img"></div>
+                    <div class="msg-bubble">
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            msgerChat.insertAdjacentHTML("beforeend", typingHTML);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const typingMsg = document.querySelector('.typing-msg');
+            if (typingMsg) {
+                typingMsg.remove();
+            }
+        }
+
+        /* ===============================================
+           Language Management
+           =============================================== */
+        // Add language change handler
+        document.getElementById('languageSelect').addEventListener('change', function(e) {
+            currentLanguage = e.target.value;
+            updateInputPlaceholder(currentLanguage);
+            console.log(`🌐 Language changed to: ${getLanguageName(currentLanguage)}`);
+            
+            // Show support info for Hindi/Kannada
+            if (currentLanguage === 'hi' || currentLanguage === 'kn') {
+                setTimeout(() => {
+                    const message = `You can type or speak in ${getLanguageName(currentLanguage)}. 
+
+Note: Voice recognition for Indian languages works best on:
+✓ Chrome browser (Desktop)
+✓ Microsoft Edge (Desktop)
+✓ Android devices with Google voice typing
+
+If voice doesn't work, you can still type in ${getLanguageName(currentLanguage)}!`;
+                    console.log('ℹ️', message);
+                    
+                    // Show brief notification
+                    showNotification(`${getLanguageName(currentLanguage)} selected. You can type or speak! 🎤`, 'info', 4000);
+                }, 500);
+            }
+        });
+
+        // Function to get language name
+        function getLanguageName(lang) {
+            const names = {
+                'en': 'English',
+                'hi': 'Hindi (हिंदी)',
+                'kn': 'Kannada (ಕನ್ನಡ)'
+            };
+            return names[lang] || 'English';
+        }
+
+        // Function to update input placeholder based on language
+        function updateInputPlaceholder(lang) {
+            const placeholders = {
+                'en': 'Ask about Ayurvedic remedies... 🎤',
+                'hi': 'आयुर्वेदिक उपचारों के बारे में पूछें... 🎤',
+                'kn': 'ಆಯುರ್ವೇದಿಕ ಚಿಕಿತ್ಸೆಗಳ ಬಗ್ಗೆ ಕೇಳಿ... 🎤'
+            };
+            document.getElementById('textInput').placeholder = placeholders[lang] || placeholders['en'];
+        }
+
+        /* ===============================================
+           Initialize Chat with Welcome Message
+           =============================================== */
+        window.onload = function() {
+            updateInputPlaceholder(currentLanguage);
+            
+            // Show voice support info in console
+            console.log('%c🌿 AyurCare Voice Guide 🎤', 'font-size: 16px; font-weight: bold; color: #4a7c59;');
+            console.log('%cVoice Input Support:', 'font-weight: bold;');
+            console.log('✓ English (en-US) - Full support on all browsers');
+            console.log('✓ Hindi (hi-IN) - Best on Chrome/Edge Desktop & Android');
+            console.log('✓ Kannada (kn-IN) - Best on Chrome/Edge Desktop & Android');
+            console.log('');
+            console.log('%cTroubleshooting:', 'font-weight: bold;');
+            console.log('• If voice doesn\'t work, you can still TYPE in your language');
+            console.log('• Make sure microphone permissions are enabled');
+            console.log('• Hindi/Kannada work best on Chrome or Edge browsers');
+            console.log('• On Windows, you may need to install language packs for better support');
+            console.log('');
+            
+            const welcomeMessage = `
+                Namaste! 🙏 Welcome to <strong>AyurCare</strong>, your personal Ayurvedic wellness guide.<br><br>
+                I can help you with natural Ayurvedic remedies for various health concerns. Feel free to ask about any health issues you're experiencing.<br><br>
+                <strong>For example, you can ask about:</strong><br>
+                • Headache or migraine<br>
+                • Cold and cough<br>
+                • Digestive issues<br>
+                • Stress and anxiety<br>
+                • Or any other health concerns
+            `;
+            appendMessage(BOT_NAME, "left", welcomeMessage);
+        };
+
+        /* ===============================================
+           Message Handling
+           =============================================== */
+        msgerForm.addEventListener("submit", event => {
+            event.preventDefault();
+
+            const msgText = msgerInput.value.trim();
+            if (!msgText) return;
+
+            appendMessage(PERSON_NAME, "right", msgText);
+            msgerInput.value = "";
+            botResponse(msgText, false);
+        });
+
+        function appendMessage(name, side, text) {
+            const msgHTML = `
+                <div class="msg ${side}-msg">
+                    <div class="msg-img"></div>
+                    <div class="msg-bubble">
+                        <div class="msg-info">
+                            <div class="msg-info-name">${name}</div>
+                            <div class="msg-info-time">${formatDate(new Date())}</div>
+                        </div>
+                        <div class="msg-text">
+                            ${text}
+                            ${side === 'left' && currentLanguage !== 'kn' ? `
+                                <button class="speak-btn" onclick="speakText(this.parentElement.textContent)" title="Listen to response">
+                                    <i class="fas fa-volume-up"></i> Listen
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+            scrollToBottom();
+        }
+
+        /* ===============================================
+           Speech Recognition & Text-to-Speech
+           =============================================== */
+        function getSpeechRecognitionLanguage(lang) {
+            const langMap = {
+                'hi': ['hi-IN', 'hi'],
+                'kn': ['kn-IN', 'kn'],
+                'en': ['en-US', 'en-IN', 'en-GB', 'en']
+            };
+            return langMap[lang] ? langMap[lang][0] : 'en-US';
+        }
+
+        function getSpeechSynthesisLanguage(lang) {
+            const langMap = {
+                'hi': ['hi-IN', 'hi'],
+                'kn': ['kn-IN', 'kn'],
+                'en': ['en-US', 'en-IN', 'en-GB', 'en']
+            };
+            return langMap[lang] ? langMap[lang][0] : 'en-US';
+        }
+
+        // Check if speech recognition is supported
+        function checkSpeechRecognitionSupport() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                console.error('❌ Speech Recognition not supported in this browser');
+                alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+                return false;
+            }
+            return true;
+        }
+
+        // Modify the speak function to use the selected language
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = getSpeechSynthesisLanguage(currentLanguage);
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        /* ===============================================
+           Remedy Images Formatter
+           =============================================== */
+        async function formatRemedyImages(images, remedyNames) {
+            if (!images || images.length === 0) return '';
+            
+            let html = '<div class="remedy-images">';
+            
+            // If not English, translate all remedy names first
+            let translatedNames = remedyNames;
+            if (currentLanguage !== 'en') {
+                translatedNames = await Promise.all(
+                    remedyNames.map(name => translateRemedyName(name, currentLanguage))
+                );
+            }
+            
+            // Then create the HTML with translated names
+            images.forEach((url, index) => {
+                const remedyName = translatedNames[index] || 'Ayurvedic Remedy';
+                html += `
+                    <div class="remedy-image-container">
+                        <img src="${url}" alt="${remedyName}" loading="lazy">
+                        <div class="remedy-name">${remedyName}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        // Add function to translate remedy names
+        async function translateRemedyName(name, targetLang) {
+            try {
+                const response = await fetch('/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: name,
+                        target_language: targetLang
+                    })
+                });
+                const data = await response.json();
+                return data.translated_text || name;
+            } catch (error) {
+                console.error('Error translating remedy name:', error);
+                return name;
+            }
+        }
+
+        /* ===============================================
+           Bot Response Handler with Typing Indicator
+           =============================================== */
+        async function botResponse(rawText, wasVoiceInput = false) {
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Check if user is not satisfied with previous remedies
+            const isNotSatisfied = rawText.toLowerCase().includes('not satisfied') || 
+                                 rawText.toLowerCase().includes('different') || 
+                                 rawText.toLowerCase().includes('alternative') ||
+                                 rawText.toLowerCase().includes('better') ||
+                                 rawText.toLowerCase().includes('more');
+
+            try {
+                const response = await fetch(`/get_bot_response`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: rawText,
+                        language: currentLanguage,
+                        use_llama: isNotSatisfied
+                    })
+                });
+                const data = await response.json();
+                
+                // Remove typing indicator
+                hideTypingIndicator();
+
+                if (data.text.toLowerCase().includes("i apologize") || data.text.toLowerCase().includes("trouble")) {
+                    let botReply = `I am an Ayurvedic health assistant. I can only help you with health-related concerns. Please feel free to ask me about any health issues you're experiencing, and I'll suggest natural Ayurvedic remedies.`;
+                    appendMessage(BOT_NAME, "left", botReply);
+                    if (wasVoiceInput && currentLanguage !== 'kn') speak(botReply);
+                    return;
+                }
+
+                let botReply = `<p>${data.text}</p>`;
+
+                if (data.images && data.images.length > 0) {
+                    const remedyNames = data.remedyNames || data.images.map(() => "Ayurvedic Remedy");
+                    const remedyImagesHtml = await formatRemedyImages(data.images, remedyNames);
+                    botReply += remedyImagesHtml;
+                }
+
+                appendMessage(BOT_NAME, "left", botReply);
+                if (wasVoiceInput) {
+                    // Small delay to ensure DOM is updated
+                    // Voice output now works for all languages including Kannada
+                    setTimeout(() => speakText(data.text), 100);
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                console.error('Error fetching bot response:', error);
+                appendMessage(BOT_NAME, "left", "I'm sorry, I encountered an error. Please try again.");
+            }
+        }
+
+        /* ===============================================
+           Utility Functions
+           =============================================== */
+        function get(selector, root = document) {
+            return root.querySelector(selector);
+        }
+
+        function formatDate(date) {
+            const h = "0" + date.getHours();
+            const m = "0" + date.getMinutes();
+            return `${h.slice(-2)}:${m.slice(-2)}`;
+        }
+
+        /* ===============================================
+           PDF Download Function
+           =============================================== */
+        function downloadChat() {
+            // Create PDF content
+            const element = document.createElement('div');
+            element.innerHTML = `
+                <div style="padding: 20px; font-family: 'Inter', Arial, sans-serif;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1 style="color: #4a7c59; margin-bottom: 10px;">🌿 AyurCare Chat History</h1>
+                        <p style="color: #5a6c68;">Generated on ${new Date().toLocaleDateString()} at ${formatDate(new Date())}</p>
+                        <hr style="border: 2px solid #4a7c59; margin: 20px 0;">
+                    </div>
+                    <div id="pdf-content">
+                        ${Array.from(document.getElementsByClassName('msg')).filter(msg => !msg.classList.contains('typing-msg')).map(msg => {
+                            const name = msg.querySelector('.msg-info-name').textContent;
+                            const time = msg.querySelector('.msg-info-time').textContent;
+                            const textElement = msg.querySelector('.msg-text');
+                            // Clone and remove speak button for PDF
+                            const textClone = textElement.cloneNode(true);
+                            const speakBtn = textClone.querySelector('.speak-btn');
+                            if (speakBtn) speakBtn.remove();
+                            const text = textClone.innerHTML;
+                            const isBotMessage = name === 'AyurCare';
+                            
+                            // Get images if they exist
+                            const remedyImagesDiv = msg.querySelector('.remedy-images');
+                            let imagesHtml = '';
+                            if (remedyImagesDiv) {
+                                imagesHtml = remedyImagesDiv.outerHTML;
+                            }
+
+                            return `
+                                <div style="
+                                    margin-bottom: 20px;
+                                    padding: 16px 20px;
+                                    border-radius: 12px;
+                                    background-color: ${isBotMessage ? '#ffffff' : '#e8f5e9'};
+                                    border: 1px solid ${isBotMessage ? '#d8d4ca' : '#5a9870'};
+                                    page-break-inside: avoid;
+                                ">
+                                    <div style="margin-bottom: 8px;">
+                                        <strong style="color: ${isBotMessage ? '#4a7c59' : '#2d3e3a'}">${name}</strong>
+                                        <span style="color: #94a3b8; margin-left: 10px; font-size: 0.85em;">${time}</span>
+                                    </div>
+                                    <div style="color: #2d3e3a; line-height: 1.7; margin-bottom: 10px;">
+                                        ${text}
+                                    </div>
+                                    ${imagesHtml}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #d8d4ca; text-align: center; color: #94a3b8; font-size: 0.9em;">
+                        <p>AyurCare - Your Ayurvedic Wellness Guide</p>
+                    </div>
+                </div>
+            `;
+
+            // PDF options
+            const opt = {
+                margin: 10,
+                filename: `AyurCare_Chat_${new Date().toISOString().slice(0,10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    scrollY: 0,
+                    windowWidth: document.documentElement.clientWidth,
+                    windowHeight: document.documentElement.clientHeight
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait'
+                }
+            };
+
+            // Generate PDF
+            html2pdf()
+                .from(element)
+                .set(opt)
+                .save();
+        }
+
+        /* ===============================================
+           Speech Recognition Setup
+           =============================================== */
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        
+        // Initialize speech recognition if supported
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = getSpeechRecognitionLanguage(currentLanguage);
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            console.log('✅ Speech Recognition initialized');
+        } else {
+            console.warn('⚠️ Speech Recognition not supported');
+            // Hide mic button if not supported
+            setTimeout(() => {
+                const micBtn = document.querySelector('.mic-btn');
+                if (micBtn) {
+                    micBtn.style.display = 'none';
+                    micBtn.title = 'Voice input not supported in this browser';
+                }
+            }, 100);
+        }
+
+        // Function to check speech recognition support
+        function checkSpeechRecognitionSupport() {
+            if (!recognition) {
+                showNotification('Voice input not supported in this browser. Please use Chrome, Edge, or Safari.', 'error');
+                return false;
+            }
+            
+            // Warn about limited language support
+            if (currentLanguage === 'hi' || currentLanguage === 'kn') {
+                const browserInfo = navigator.userAgent;
+                const isChrome = /Chrome/.test(browserInfo) && /Google Inc/.test(navigator.vendor);
+                const isEdge = /Edg/.test(browserInfo);
+                
+                if (!isChrome && !isEdge) {
+                    showNotification('Hindi/Kannada voice input works best on Chrome or Edge browsers.', 'warning');
+                }
+                
+                console.log(`ℹ️ Note: ${getLanguageName(currentLanguage)} speech recognition support may vary by device and browser.`);
+                console.log(`ℹ️ If voice doesn't work, you can type in ${getLanguageName(currentLanguage)} and the bot will still understand!`);
+            }
+            return true;
+        }
+
+        // Set up recognition event handlers only if recognition is available
+        if (recognition) {
+            recognition.onresult = (event) => {
+                const speechResult = event.results[0][0].transcript;
+                const confidence = event.results[0][0].confidence;
+                console.log(`✓ Recognized: "${speechResult}" (confidence: ${(confidence * 100).toFixed(1)}%)`);
+                
+                showNotification(`Recognized: "${speechResult}"`, 'info');
+                
+                document.getElementById('textInput').value = speechResult;
+                document.querySelector('.mic-btn').classList.remove('listening');
+                document.querySelector('.mic-btn').title = `Voice Input (${getLanguageName(currentLanguage)})`;
+                isListening = false;
+                
+                // Send message and indicate it was voice input
+                appendMessage(PERSON_NAME, "right", speechResult);
+                msgerInput.value = "";
+                botResponse(speechResult, true);
+            };
+
+            recognition.onerror = (event) => {
+            console.error('🚫 Speech recognition error:', event.error);
+            const micBtn = document.querySelector('.mic-btn');
+            micBtn.classList.remove('listening');
+            micBtn.title = `Voice Input (${getLanguageName(currentLanguage)})`;
+            isListening = false;
+            
+            // Show user-friendly error message
+            const langName = getLanguageName(currentLanguage);
+            if (event.error === 'no-speech') {
+                showNotification(`No speech detected in ${langName}. Please try again.`, 'error');
+            } else if (event.error === 'audio-capture') {
+                showNotification('Microphone not available. Please check permissions.', 'error');
+            } else if (event.error === 'not-allowed') {
+                showNotification('Microphone access denied. Please enable microphone permissions.', 'error');
+            } else if (event.error === 'network') {
+                showNotification('Network error. Please check your connection.', 'error');
+            } else if (event.error === 'language-not-supported') {
+                showNotification(`${langName} voice recognition may not be fully supported. Try typing instead.`, 'error');
+                // Fallback to English if language not supported
+                if (currentLanguage !== 'en') {
+                    console.log('⚠️ Falling back to English for voice input');
+                    setTimeout(() => {
+                        if (confirm(`${langName} voice input is not supported on your device. Would you like to use English voice input instead?`)) {
+                            document.getElementById('languageSelect').value = 'en';
+                            currentLanguage = 'en';
+                            updateInputPlaceholder('en');
+                        }
+                    }, 500);
+                }
+            } else {
+                showNotification(`Voice recognition error: ${event.error}`, 'error');
+            }
+        };
+
+            recognition.onend = () => {
+                const micBtn = document.querySelector('.mic-btn');
+                micBtn.classList.remove('listening');
+                micBtn.title = `Voice Input (${getLanguageName(currentLanguage)})`;
+                isListening = false;
+            };
+        } // End of recognition check
+
+        function startSpeechRecognition() {
+            // Check if recognition is available
+            if (!recognition) {
+                showNotification('Voice input not supported in this browser. Please use Chrome, Edge, or Safari.', 'error');
+                return;
+            }
+            
+            if (isListening) {
+                recognition.stop();
+                document.querySelector('.mic-btn').classList.remove('listening');
+                isListening = false;
+                return;
+            }
+            
+            // Check if speech recognition is supported
+            if (!checkSpeechRecognitionSupport()) {
+                return;
+            }
+            
+            try {
+                // Update recognition language before starting
+                recognition.lang = getSpeechRecognitionLanguage(currentLanguage);
+                const langName = getLanguageName(currentLanguage);
+                console.log(`🎤 Starting voice recognition in ${langName} (${recognition.lang})`);
+                
+                // Update mic button title
+                const micBtn = document.querySelector('.mic-btn');
+                micBtn.title = `Listening in ${langName}...`;
+                
+                // Show a visual notification
+                showNotification(`🎤 Listening in ${langName}...`, 'info');
+                
+                recognition.start();
+                micBtn.classList.add('listening');
+                isListening = true;
+            } catch (error) {
+                console.error('Error starting speech recognition:', error);
+                showNotification('Unable to start voice recognition. Please try again.', 'error');
+            }
+        }
+
+        // Add notification function
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = 'voice-notification ' + type;
+            notification.textContent = message;
+            
+            let bgColor;
+            if (type === 'error') {
+                bgColor = 'linear-gradient(135deg, #ef4444, #dc2626)';
+            } else if (type === 'warning') {
+                bgColor = 'linear-gradient(135deg, #f59e0b, #d97706)';
+            } else {
+                bgColor = 'linear-gradient(135deg, #4a7c59, #6b9080)';
+            }
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${bgColor};
+                color: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease, fadeOut 0.3s ease ${duration - 300}ms forwards;
+                font-weight: 500;
+                max-width: 350px;
+                font-size: 0.9rem;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), duration);
+        }
+
+        // Text to Speech Setup
+        const synth = window.speechSynthesis;
+
+        function speakText(text) {
+            // Clean up the text (remove HTML, buttons, etc.)
+            const cleanText = text.replace(/<[^>]*>/g, '').replace(/Listen/g, '').trim();
+            speak(cleanText);
+        }
+        let currentUtterance = null;
+
+        function speakText(text) {
+            // Stop any ongoing speech
+            if (currentUtterance) {
+                synth.cancel();
+            }
+
+            // Remove HTML tags and clean up the text
+            const cleanText = text.replace(/<[^>]*>/g, '').trim();
+            if (!cleanText) return;
+            
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = getSpeechSynthesisLanguage(currentLanguage);
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            
+            // Wait for voices to load if not already loaded
+            let voices = synth.getVoices();
+            if (!voices.length) {
+                synth.onvoiceschanged = () => {
+                    voices = synth.getVoices();
+                    selectVoiceAndSpeak();
+                };
+            } else {
+                selectVoiceAndSpeak();
+            }
+
+            function selectVoiceAndSpeak() {
+                const targetLang = utterance.lang;
+                console.log(`🎤 Speaking in ${currentLanguage} (${targetLang})`);
+                
+                // Try to find the best matching voice
+                let selectedVoice = voices.find(v => v.lang === targetLang);
+                
+                // If exact match not found, try language prefix match (e.g., 'hi' matches 'hi-IN')
+                if (!selectedVoice) {
+                    const langPrefix = targetLang.split('-')[0];
+                    selectedVoice = voices.find(v => v.lang.startsWith(langPrefix));
+                }
+                
+                // For Indian languages without native voice, try Hindi as fallback
+                if (!selectedVoice && (currentLanguage === 'kn' || currentLanguage === 'hi')) {
+                    selectedVoice = voices.find(v => v.lang.startsWith('hi-'));
+                    if (selectedVoice) {
+                        console.log('Using Hindi voice as fallback for Indian language');
+                    }
+                }
+                
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    console.log(`✓ Voice found: ${selectedVoice.name} (${selectedVoice.lang})`);
+                } else {
+                    console.warn(`⚠️ No voice found for ${targetLang}, using default`);
+                }
+                
+                currentUtterance = utterance;
+                synth.speak(utterance);
+            }
+        }
+
+        // Style updates
+        const style = document.createElement('style');
+        style.textContent = `
+            .msger-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+            }
+
+            .download-btn {
+                color: #fff;
+                margin-left: 10px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 1.2em;
+                padding: 5px 10px;
+                transition: transform 0.2s ease;
+            }
+
+            .speak-btn {
+                color: #4CAF50;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 0.9em;
+                padding: 2px 5px;
+                margin-left: 8px;
+                transition: transform 0.2s ease;
+                vertical-align: middle;
+                display: inline-block;
+            }
+
+            .download-btn:hover, .speak-btn:hover {
+                transform: scale(1.1);
+            }
+
+            .msg-text {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .remedy-images {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 10px;
+            }
+
+            .remedy-image-container {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .remedy-image-container img {
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                margin-bottom: 8px;
+            }
+
+            .remedy-name {
+                margin-top: 5px;
+                font-weight: 500;
+                color: #4a4a4a;
+                font-size: 0.95em;
+            }
+
+            @media print {
+                .msger-inputarea, .download-btn, .speak-btn {
+                    display: none;
+                }
+            }
+
+            .header-buttons {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .language-select {
+                padding: 8px;
+                border-radius: 20px;
+                border: 1px solid #ccc;
+                background-color: white;
+                font-size: 14px;
+                cursor: pointer;
+                outline: none;
+            }
+
+            .language-select:hover {
+                border-color: #4CAF50;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Load chat history when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/get_chat_history')
+                .then(response => response.json())
+                .then(chats => {
+                    const chatContainer = document.querySelector('.chat-container');
+                    chats.reverse().forEach(chat => {
+                        // Add user message
+                        const userMessage = document.createElement('div');
+                        userMessage.className = 'message user-message';
+                        userMessage.innerHTML = `
+                            <div class="message-content">
+                                <p>${chat.message}</p>
+                            </div>
+                        `;
+                        chatContainer.appendChild(userMessage);
+
+                        // Add bot response
+                        const botMessage = document.createElement('div');
+                        botMessage.className = 'message bot-message';
+                        botMessage.innerHTML = `
+                            <div class="message-content">
+                                <p>${chat.response}</p>
+                            </div>
+                        `;
+                        chatContainer.appendChild(botMessage);
+                    });
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                })
+                .catch(error => console.error('Error loading chat history:', error));
+        });
+
+        // Add logout button to header
+        const header = document.querySelector('header');
+        const logoutButton = document.createElement('a');
+        logoutButton.href = '/logout';
+        logoutButton.className = 'logout-button';
+        logoutButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        header.appendChild(logoutButton);
+    </script>
+
+    <style>
+        .remedy-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .remedy-image-container {
+            text-align: center;
+        }
+
+        .remedy-name {
+            margin-top: 5px;
+            font-weight: 500;
+            color: #4a4a4a;
+        }
+
+        .msg-text {
+            line-height: 1.5;
+        }
+
+        .download-btn, .mic-btn, .speak-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px 10px;
+            transition: transform 0.2s ease;
+            vertical-align: middle;
+        }
+
+        .download-btn {
+            color: #fff;
+            margin-left: 10px;
+        }
+
+        .mic-btn {
+            color: #4CAF50;
+        }
+
+        .speak-btn {
+            color: #4CAF50;
+            margin-left: 5px;
+            font-size: 1em;
+        }
+
+        .mic-btn.listening {
+            animation: pulse 1.5s infinite;
+            color: #ff4444;
+        }
+
+        .download-btn:hover, .mic-btn:hover, .speak-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @media print {
+            .msger-inputarea, .download-btn, .mic-btn, .speak-btn {
+                display: none;
+            }
+        }
+    </style>
+</body>
+
+</html>
