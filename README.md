@@ -93,11 +93,11 @@ AyurBot/
 <img width="1727" alt="data set response" src="https://github.com/user-attachments/assets/2a70fce8-8971-44cf-916f-04eb9a3bc2aa" />
 
 <br><br>
-<img width="1728" alt="llama reposne" src="https://github.com/user-attachments/assets/f7840514-a011-4cac-a8a7-92656ae03e25" />
+
 
 
 <br><br>
-<img width="1728" alt="Screenshot 2025-06-23 at 5 17 37 PM" src="https://github.com/user-attachments/assets/3825632d-6937-4d10-b5c0-124a4a39d4de" />
+
 
 <br>
 
