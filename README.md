@@ -90,7 +90,7 @@ AyurBot/
 <img width="1727" alt="Home Page" src="https://github.com/user-attachments/assets/d9ffb5d1-4bdf-4fce-8b01-349fd6fde369" />
 
 <br><br>
-<img width="1727" alt="data set response" src="https://github.com/user-attachments/assets/2a70fce8-8971-44cf-916f-04eb9a3bc2aa" />
+
 
 <br><br>
 
